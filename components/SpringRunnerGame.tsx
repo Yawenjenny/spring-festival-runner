@@ -272,6 +272,7 @@ const SpringRunnerGame: React.FC = () => {
 
     const render = () => {
       if (!ctx || !canvas) return;
+      ctx.imageSmoothingEnabled = false;
 
       const { horse, mountains, yuanbaos, particles, gameSpeed, frame, isRunning } = stateRef.current;
 
@@ -374,7 +375,7 @@ const SpringRunnerGame: React.FC = () => {
       />
 
       {/* HUD - Score */}
-      <div className="absolute top-2 left-2 sm:top-4 sm:left-4 flex items-center bg-white/80 backdrop-blur-sm px-3 py-1.5 sm:px-4 sm:py-2 rounded-full shadow-sm pointer-events-none">
+      <div className="absolute top-2 left-2 sm:top-4 sm:left-4 flex items-center bg-white/80 px-3 py-1.5 sm:px-4 sm:py-2 rounded-full shadow-sm pointer-events-none">
         <img src={yuanbaoIcon} alt="yuanbao" className="h-3 sm:h-4 w-auto object-contain mr-1 sm:mr-1.5" />
         <span className="text-base sm:text-xl font-bold text-red-700 font-mono">¥{score}</span>
       </div>
