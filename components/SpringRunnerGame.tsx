@@ -272,7 +272,6 @@ const SpringRunnerGame: React.FC = () => {
 
     const render = () => {
       if (!ctx || !canvas) return;
-      ctx.imageSmoothingEnabled = false;
 
       const { horse, mountains, yuanbaos, particles, gameSpeed, frame, isRunning } = stateRef.current;
 
