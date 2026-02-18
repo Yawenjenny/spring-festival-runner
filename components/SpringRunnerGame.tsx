@@ -14,14 +14,17 @@ const SpringRunnerGame: React.FC = () => {
   const [gameState, setGameState] = useState<GameState>(GameState.START);
   const [score, setScore] = useState(0);
   const [assetsLoaded, setAssetsLoaded] = useState(false);
-  const [gameWidth, setGameWidth] = useState(CANVAS_WIDTH);
+  // Initialize width immediately to avoid layout shift/logic mismatch
+  const [gameWidth, setGameWidth] = useState(() =>
+    typeof window !== 'undefined' && window.innerWidth < 640 ? 380 : 800
+  );
 
   // Set game width based on screen size (Zoom in for mobile)
   useEffect(() => {
     const handleResize = () => {
       // If mobile, use smaller width to "zoom in" (make objects look bigger)
       if (window.innerWidth < 640) {
-        setGameWidth(420);
+        setGameWidth(380);
       } else {
         setGameWidth(800);
       }
@@ -394,6 +397,7 @@ const SpringRunnerGame: React.FC = () => {
       <div className="absolute top-2 left-2 sm:top-4 sm:left-4 flex items-center bg-white/80 px-3 py-1.5 sm:px-4 sm:py-2 rounded-full shadow-sm pointer-events-none">
         <img src={yuanbaoIcon} alt="yuanbao" className="h-3 sm:h-4 w-auto object-contain mr-1 sm:mr-1.5" />
         <span className="text-base sm:text-xl font-bold text-red-700 font-mono">¥{score}</span>
+        {gameWidth < 600 && <span className="ml-2 text-xs text-gray-500">Mobile v2</span>}
       </div>
 
       {/* Loading Overlay */}
