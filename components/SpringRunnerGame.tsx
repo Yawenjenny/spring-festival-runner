@@ -166,7 +166,7 @@ const SpringRunnerGame: React.FC = () => {
       // As speed increases, spawn slightly more frequently but maintain gap
       if (frame % Math.floor(CONFIG.spawnRateMountain / (speed / CONFIG.baseSpeed)) === 0) {
         if (Math.random() > 0.6) { // 40% chance (less frequent, like Dino)
-          const mh = 30 + Math.floor(Math.random() * 25); // height between 30 and 55
+          const mh = Math.floor((30 + Math.random() * 25) * 1.2); // 20% Bigger mountains
           const mw = Math.floor(mh * 0.8); // width proportional to height
           const overlap = 4; // Sink slightly into the ground so it doesn't float
           stateRef.current.mountains.push({
@@ -278,7 +278,7 @@ const SpringRunnerGame: React.FC = () => {
             x: yb.x,
             y: yb.y,
             life: 30,
-            text: `+${YUANBAO_VALUE}¥`,
+            text: `+￥${YUANBAO_VALUE} `,
             color: COLORS.gold
           });
         }
