@@ -28,7 +28,11 @@ const RedPocketModal: React.FC<RedPocketModalProps> = ({ score, onRestart }) => 
   const message = getScoreMessage(score);
 
   return (
-    <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-[#E6E3DB] px-4">
+    <div
+      className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-[#E6E3DB] px-4"
+      onTouchStart={(e) => e.stopPropagation()}
+      onClick={(e) => e.stopPropagation()}
+    >
       {/* Everything centered vertically as one block */}
       <img
         src={pocketImage}
@@ -43,6 +47,7 @@ const RedPocketModal: React.FC<RedPocketModalProps> = ({ score, onRestart }) => 
 
       <button
         onClick={onRestart}
+        onTouchEnd={(e) => { e.preventDefault(); onRestart(); }}
         className="mt-5 sm:mt-6 px-8 sm:px-10 py-3 sm:py-4 bg-[#E9AE57] hover:bg-[#D49A45] text-white text-lg sm:text-xl font-bold rounded-full shadow-lg transform transition-all active:scale-95 focus:outline-none focus:ring-4 focus:ring-[#E9AE57]/40"
       >
         Play Again
