@@ -308,23 +308,24 @@ const SpringRunnerGame: React.FC = () => {
         // Increase speed by 0.2 every 1000 frames
         stateRef.current.gameSpeed = CONFIG.baseSpeed + Math.floor(frame / 1000) * 0.2;
 
-        // Entities Movement & Cleanup
-        stateRef.current.mountains = mountains
-          .map(m => ({ ...m, x: m.x - gameSpeed }))
-          .filter(m => m.x + m.w > -100);
+        // Entities Movement & Cleanup (mutate in place to avoid GC on mobile)
+        for (let i = mountains.length - 1; i >= 0; i--) {
+          mountains[i].x -= gameSpeed;
+          if (mountains[i].x + mountains[i].w <= -100) mountains.splice(i, 1);
+        }
 
-        stateRef.current.yuanbaos = yuanbaos
-          .map(yb => ({
-            ...yb,
-            x: yb.x - gameSpeed,
-            // Floating effect
-            y: yb.y + Math.sin((frame * 0.03) + yb.floatOffset) * 0.3
-          }))
-          .filter(yb => yb.x + yb.w > -100 && !yb.collected);
+        for (let i = yuanbaos.length - 1; i >= 0; i--) {
+          const yb = yuanbaos[i];
+          yb.x -= gameSpeed;
+          yb.y += Math.sin((frame * 0.03) + yb.floatOffset) * 0.3;
+          if (yb.x + yb.w <= -100 || yb.collected) yuanbaos.splice(i, 1);
+        }
 
-        stateRef.current.particles = particles
-          .map(p => ({ ...p, y: p.y - 1, life: p.life - 1 }))
-          .filter(p => p.life > 0);
+        for (let i = particles.length - 1; i >= 0; i--) {
+          particles[i].y -= 1;
+          particles[i].life -= 1;
+          if (particles[i].life <= 0) particles.splice(i, 1);
+        }
 
         stateRef.current.frame++;
         horse.frameCount++;

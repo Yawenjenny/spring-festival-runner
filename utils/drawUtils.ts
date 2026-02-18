@@ -78,10 +78,6 @@ export const drawYuanbao = (ctx: CanvasRenderingContext2D, yb: Yuanbao, image?: 
   ctx.save();
   ctx.translate(yb.x, yb.y);
 
-  // Glow effect
-  ctx.shadowColor = COLORS.lightGold;
-  ctx.shadowBlur = 10;
-
   if (image) {
     // Preserve the image's natural aspect ratio
     const imgRatio = image.naturalWidth / image.naturalHeight;
@@ -160,7 +156,6 @@ export const drawClouds = (ctx: CanvasRenderingContext2D, frame: number, width: 
     const cloudH2 = 38;
 
     ctx.save();
-    ctx.globalAlpha = 0.85;
     // Cloud 1
     ctx.drawImage(image, width - offset1, 50, cloudW1, cloudH1);
     // Cloud 2
