@@ -14,6 +14,23 @@ const SpringRunnerGame: React.FC = () => {
   const [gameState, setGameState] = useState<GameState>(GameState.START);
   const [score, setScore] = useState(0);
   const [assetsLoaded, setAssetsLoaded] = useState(false);
+  const [gameWidth, setGameWidth] = useState(CANVAS_WIDTH);
+
+  // Set game width based on screen size (Zoom in for mobile)
+  useEffect(() => {
+    const handleResize = () => {
+      // If mobile, use smaller width to "zoom in" (make objects look bigger)
+      if (window.innerWidth < 640) {
+        setGameWidth(420);
+      } else {
+        setGameWidth(800);
+      }
+    };
+
+    handleResize(); // Initial check
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   // Store loaded images
   const imagesRef = useRef<GameImages | null>(null);
@@ -151,7 +168,7 @@ const SpringRunnerGame: React.FC = () => {
           const overlap = 4; // Sink slightly into the ground so it doesn't float
           stateRef.current.mountains.push({
             id: frame,
-            x: CANVAS_WIDTH,
+            x: gameWidth,
             y: CANVAS_HEIGHT - CONFIG.groundHeight - mh + overlap,
             w: mw,
             h: mh + overlap,
@@ -169,7 +186,7 @@ const SpringRunnerGame: React.FC = () => {
             CANVAS_HEIGHT - CONFIG.groundHeight - 180 // High jump level
           ];
           const y = heightLevels[Math.floor(Math.random() * heightLevels.length)];
-          const ybX = CANVAS_WIDTH;
+          const ybX = gameWidth;
           const ybW = 32;
           const ybH = 32;
           const buffer = 20; // Extra spacing to keep them visually apart
@@ -276,18 +293,18 @@ const SpringRunnerGame: React.FC = () => {
       const { horse, mountains, yuanbaos, particles, gameSpeed, frame, isRunning } = stateRef.current;
 
       // CLEAR
-      ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+      ctx.clearRect(0, 0, gameWidth, CANVAS_HEIGHT);
 
       // BACKGROUND
       // Draw simple background gradient or solid color
       ctx.fillStyle = COLORS.bgSky;
-      ctx.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+      ctx.fillRect(0, 0, gameWidth, CANVAS_HEIGHT);
 
       // Draw clouds/decorations
-      drawClouds(ctx, frame, CANVAS_WIDTH, imagesRef.current?.cloud);
+      drawClouds(ctx, frame, gameWidth, imagesRef.current?.cloud);
 
       // Draw Ground
-      drawGround(ctx, CANVAS_WIDTH, CANVAS_HEIGHT, CONFIG.groundHeight, frame, gameSpeed);
+      drawGround(ctx, gameWidth, CANVAS_HEIGHT, CONFIG.groundHeight, frame, gameSpeed);
 
       // UPDATE LOGIC
       if (isRunning) {
@@ -362,13 +379,13 @@ const SpringRunnerGame: React.FC = () => {
     return () => {
       cancelAnimationFrame(animationFrameId);
     };
-  }, [gameState, assetsLoaded]); // Re-bind when game state changes (mainly for restart)
+  }, [gameState, assetsLoaded, gameWidth]); // Re-bind when game state changes (mainly for restart)
 
   return (
     <div className="relative" ref={containerRef} onClick={handleJump} style={{ touchAction: 'none' }}>
       <canvas
         ref={canvasRef}
-        width={CANVAS_WIDTH}
+        width={gameWidth}
         height={CANVAS_HEIGHT}
         className="block bg-[#E6E3DB] w-full h-auto cursor-pointer"
       />
