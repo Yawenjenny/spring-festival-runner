@@ -124,10 +124,11 @@ const SpringRunnerGame: React.FC = () => {
     // Use a small threshold (5px) to allow jumping even if slightly off due to float rounding
     const groundLevel = CANVAS_HEIGHT - CONFIG.groundHeight - horse.h;
     if (horse.y >= groundLevel - 5) {
-      horse.vy = CONFIG.jumpStrength;
+      const isMobile = gameWidth < 640;
+      horse.vy = isMobile ? CONFIG.jumpStrength : -9; // Slower/Higher jump for web
       horse.isJumping = true;
     }
-  }, [gameState, initGame, assetsLoaded]);
+  }, [gameState, initGame, assetsLoaded, gameWidth]);
 
   // Input Listeners
   useEffect(() => {
@@ -311,8 +312,11 @@ const SpringRunnerGame: React.FC = () => {
 
       // UPDATE LOGIC
       if (isRunning) {
+        const isMobile = gameWidth < 640;
+
         // Physics
-        horse.vy += CONFIG.gravity;
+        const tickGravity = isMobile ? CONFIG.gravity : 0.2; // Floatier gravity for web
+        horse.vy += tickGravity;
         horse.y += horse.vy;
 
         // Ground Collision
@@ -324,7 +328,6 @@ const SpringRunnerGame: React.FC = () => {
         }
 
         // Speed Progression
-        const isMobile = gameWidth < 640;
         const base = isMobile ? CONFIG.baseSpeed : CONFIG.baseSpeed * 0.5; // Web 50% slower start
         // Smoother, consistent acceleration
         const progression = Math.floor(frame / 800) * 0.25;
