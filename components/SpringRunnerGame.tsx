@@ -325,10 +325,10 @@ const SpringRunnerGame: React.FC = () => {
 
         // Speed Progression
         const isMobile = gameWidth < 640;
-        const base = isMobile ? CONFIG.baseSpeed : CONFIG.baseSpeed * 0.8; // Web 20% slower start
-        const progression = Math.floor(frame / 1000) * 0.2;
-        const scoreBoost = stateRef.current.score >= 150 ? 0.3 : 0; // Noticeable boost after 150
-        stateRef.current.gameSpeed = base + progression + scoreBoost;
+        const base = isMobile ? CONFIG.baseSpeed : CONFIG.baseSpeed * 0.5; // Web 50% slower start
+        // Smoother, consistent acceleration
+        const progression = Math.floor(frame / 800) * 0.25;
+        stateRef.current.gameSpeed = base + progression;
 
         // Entities Movement & Cleanup (mutate in place to avoid GC on mobile)
         for (let i = mountains.length - 1; i >= 0; i--) {
