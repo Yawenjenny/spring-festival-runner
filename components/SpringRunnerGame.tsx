@@ -10,6 +10,7 @@ import yuanbaoIcon from '../pic files/yuanbao.png';
 
 const SpringRunnerGame: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
   const [gameState, setGameState] = useState<GameState>(GameState.START);
   const [score, setScore] = useState(0);
   const [assetsLoaded, setAssetsLoaded] = useState(false);
@@ -123,12 +124,12 @@ const SpringRunnerGame: React.FC = () => {
     };
 
     window.addEventListener('keydown', handleKeyDown);
-    const canvas = canvasRef.current;
-    canvas?.addEventListener('touchstart', handleTouchStart, { passive: false });
+    const container = containerRef.current;
+    container?.addEventListener('touchstart', handleTouchStart, { passive: false });
 
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
-      canvas?.removeEventListener('touchstart', handleTouchStart);
+      container?.removeEventListener('touchstart', handleTouchStart);
     };
   }, [handleJump]);
 
@@ -364,18 +365,16 @@ const SpringRunnerGame: React.FC = () => {
   }, [gameState, assetsLoaded]); // Re-bind when game state changes (mainly for restart)
 
   return (
-    <div className="relative">
+    <div className="relative" ref={containerRef} onClick={handleJump} style={{ touchAction: 'none' }}>
       <canvas
         ref={canvasRef}
         width={CANVAS_WIDTH}
         height={CANVAS_HEIGHT}
         className="block bg-[#E6E3DB] w-full h-auto cursor-pointer"
-        style={{ touchAction: 'none' }}
-        onClick={handleJump}
       />
 
       {/* HUD - Score */}
-      <div className="absolute top-2 left-2 sm:top-4 sm:left-4 flex items-center bg-white/80 backdrop-blur-sm px-3 py-1.5 sm:px-4 sm:py-2 rounded-full shadow-sm">
+      <div className="absolute top-2 left-2 sm:top-4 sm:left-4 flex items-center bg-white/80 backdrop-blur-sm px-3 py-1.5 sm:px-4 sm:py-2 rounded-full shadow-sm pointer-events-none">
         <img src={yuanbaoIcon} alt="yuanbao" className="h-3 sm:h-4 w-auto object-contain mr-1 sm:mr-1.5" />
         <span className="text-base sm:text-xl font-bold text-red-700 font-mono">¥{score}</span>
       </div>
