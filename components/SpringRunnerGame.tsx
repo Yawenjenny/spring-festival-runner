@@ -124,12 +124,11 @@ const SpringRunnerGame: React.FC = () => {
     };
 
     window.addEventListener('keydown', handleKeyDown);
-    const container = containerRef.current;
-    container?.addEventListener('touchstart', handleTouchStart, { passive: false });
+    window.addEventListener('touchstart', handleTouchStart, { passive: false });
 
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
-      container?.removeEventListener('touchstart', handleTouchStart);
+      window.removeEventListener('touchstart', handleTouchStart);
     };
   }, [handleJump]);
 
