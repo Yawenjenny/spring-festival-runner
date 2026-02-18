@@ -323,9 +323,12 @@ const SpringRunnerGame: React.FC = () => {
           horse.isJumping = false;
         }
 
-        // Speed Progression (Very subtle)
-        // Increase speed by 0.2 every 1000 frames
-        stateRef.current.gameSpeed = CONFIG.baseSpeed + Math.floor(frame / 1000) * 0.2;
+        // Speed Progression
+        const isMobile = gameWidth < 640;
+        const base = isMobile ? CONFIG.baseSpeed : CONFIG.baseSpeed * 0.8; // Web 20% slower start
+        const progression = Math.floor(frame / 1000) * 0.2;
+        const scoreBoost = stateRef.current.score >= 150 ? 0.3 : 0; // Noticeable boost after 150
+        stateRef.current.gameSpeed = base + progression + scoreBoost;
 
         // Entities Movement & Cleanup (mutate in place to avoid GC on mobile)
         for (let i = mountains.length - 1; i >= 0; i--) {
